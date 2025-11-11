@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase — Your Safe Space for Mental Wellness</title>
+    <!-- UPDATED: Favicon with your MindEase logo -->
+    <link rel="icon" href="MindEaseLogo.jpg">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --color-primary: #5A67D8;
+            /* Indigo/Lavender */
+            --color-secondary: #48BB78;
+            /* Green */
+            --color-accent: #F6AD55;
+            /* Orange */
+            --color-text: #2D3748;
+            --color-bg: #F7FAFC;
+        }
+
+        /* --- RE-ADDED: Foundational Styles --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--color-text);
+            scroll-behavior: smooth;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #4C51BF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+        }
+
+        .btn-secondary {
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            transition: background-color 0.3s, transform 0.2s, color 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.2);
+        }
+
+        /* REMOVED: Duplicate/Old .hero-gradient rule */
+
+        .perspective-grid {
+            perspective: 1000px;
+        }
+
+        .feature-card-container {
+            width: 100%;
+            height: 200px;
+            perspective: 1000px;
+        }
+
+        .feature-card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+
+        .feature-card-container:hover .feature-card {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-front {
+            background-color: #F9FAFB;
+        }
+
+        .card-back {
+            background-color: var(--color-primary);
+            transform: rotateY(180deg);
+        }
+
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: opacity 0.3s ease;
+            z-index: 50;
+        }
+
+        .main-content-wrapper {
+            position: relative;
+            z-index: 1;
+            /* MODIFIED: Set back to the default light background */
+            background-color: var(--color-bg);
+            overflow-x: hidden;
+        }
+
+        .aurora-background {
+            /* MODIFIED: Hide the aurora blobs for now to feature the new gradient */
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .hero-gradient::before {
+            display: none;
+        }
+
+        .perspective-grid {
+        }
+
+        /* --- MODIFIED: Hero Gradient changed to Animated Deep Indigo --- */
+        .hero-gradient {
+            /* A deep, rich, calming gradient that shifts subtly */
+            background: linear-gradient(270deg, var(--color-primary), var(--color-secondary), var(--color-accent), var(--color-primary));
+            background-size: 600% 600%;
+            animation: subtle-gradient-shift 25s ease infinite;
+            
+            position: relative;
+            z-index: 1;
+            /* REMOVED: backdrop-filter and semi-transparent background */
+        }
+
+        /* NEW Keyframe for the hero background animation */
+        @keyframes subtle-gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+
+        /* REMOVED: Duplicate .hero-gradient::before rule */
+        
+        .aurora-blob:nth-child(3) {
+            background: var(--color-accent);
+            width: 450px;
+            height: 450px;
+            top: 40%;
+            left: 40%;
+            animation: move-blob-3 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes move-blob-1 {
+            from {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            to {
+                transform: translate(150px, 100px) scale(1.2);
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes move-blob-2 {
+            from {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.4;
+            }
+            to {
+                transform: translate(-200px, -50px) scale(0.8);
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes move-blob-3 {
+            from {
+                transform: translate(0, 0) scale(1.1);
+                opacity: 0.3;
+            }
+            to {
+                transform: translate(-100px, 150px) scale(1);
+                opacity: 0.4;
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        /* --- END: Re-added Styles --- */
+
+        /* REMOVED: Keyframe for 3D logo rotation (was unused) */
+        /* @keyframes rotate-3d ... */
+        /* .animate-rotate-3d ... */
+
+
+        /* Definitions for the hero text animations */
+        .animate-fade-in {
+            animation: fade-in 1s ease-out 0.1s forwards;
+            opacity: 0;
+        }
+
+        .animate-fade-in-delay-1 {
+            animation: fade-in 1s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .animate-fade-in-delay-2 {
+            animation: fade-in 1s ease-out 0.7s forwards;
+            opacity: 0;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 15px 0px rgba(90, 103, 216, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 25px 8px rgba(90, 103, 216, 0.7);
+            }
+        }
+
+        .animate-pulse-glow {
+            animation: pulse-glow 2.5s ease-in-out infinite;
+        }
+
+        /* NEW: Gentle pulse for feature icons */
+        @keyframes pulse-light {
+
+            0%,
+            100% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        .animate-pulse-light {
+            animation: pulse-light 3s ease-in-out infinite;
+        }
+
+        @keyframes warm-ethereal-glow {
+            0% {
+                box-shadow: 0 0 10px 0px rgba(255, 165, 0, 0.5), 0 0 20px 0px rgba(255, 165, 0, 0.3);
+            }
+
+            25% {
+                box-shadow: 0 0 15px 5px rgba(255, 140, 0, 0.6), 0 0 30px 5px rgba(255, 140, 0, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 20px 10px rgba(255, 215, 0, 0.7), 0 0 40px 10px rgba(255, 215, 0, 0.5);
+            }
+
+            75% {
+                box-shadow: 0 0 15px 5px rgba(255, 140, 0, 0.6), 0 0 30px 5px rgba(255, 140, 0, 0.4);
+            }
+
+            100% {
+                box-shadow: 0 0 10px 0px rgba(255, 165, 0, 0.5), 0 0 20px 0px rgba(255, 165, 0, 0.3);
+            }
+        }
+
+        .animate-warm-glow {
+            animation: warm-ethereal-glow 4s ease-in-out infinite;
+        }
+
+        /* --- NEW: Logo Jiggle Animation (Inspired by 'Sniff' logo @ 01:38 in video) --- */
+        .logo-container {
+            /* Setting a base size for the circular logo */
+            width: 16rem; /* w-64 */
+            height: 16rem; /* h-64 */
+            border-radius: 9999px; /* rounded-full */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 9999px; /* Ensure img is also round */
+        }
+
+        /* Apply the jiggle animation on hover */
+        .logo-container:hover {
+            transform: scale(1.03); /* Slight lift */
+            box-shadow: 0 20px 40px rgba(90, 103, 216, 0.3); /* Deeper shadow */
+            animation: logo-jiggle 0.5s ease;
+        }
+
+        @keyframes logo-jiggle {
+            0%, 100% { transform: scale(1.03) rotate(0deg); }
+            25% { transform: scale(1.03) rotate(-2deg); }
+            75% { transform: scale(1.03) rotate(2deg); }
+        }
+        /* --- END: Logo Jiggle Animation --- */
+
+        /* --- REMOVED: Neon Headline Styles --- */
+        /* All .neon-headline, .neon-word, @keyframes animate-neon-in, @keyframes pulse-neon-glow styles removed */
+        /* --- END: Neon Headline Styles --- */
+
+
+        /* --- NEW: Slide-in Text Animation (from Video) --- */
+        .slide-in-headline {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800; /* bold */
+            font-size: 2.5rem; /* mobile */
+            line-height: 1.2;
+            letter-spacing: 0.05em; /* slightly increased */
+            text-align: center;
+            color: var(--color-text); /* Use default text color */
+            margin-bottom: 1rem; /* mb-4 */
+            padding-top: 1rem;
+        }
+
+        /* Larger text on desktop */
+        @media (min-width: 768px) { /* md: */
+            .slide-in-headline {
+                font-size: 3.75rem; /* 60px, matches text-6xl */
+                line-height: 1.1; /* Adjust line height for taller words */
+            }
+        }
+
+        /* This is the wrapper for each word, it clips the content */
+        .word-wrapper {
+            display: inline-block;
+            overflow: hidden;
+            /* This is the trick from the video */
+            vertical-align: bottom; /* Align the wrappers */
+            margin: 0 0.15em; /* Add space between words */
+        }
+
+        /* This is the word itself that moves */
+        .word-inner {
+            display: inline-block;
+            transform: translateY(100%); /* Start below the viewport */
+            opacity: 0;
+            animation: slide-in-up 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: var(--delay);
+            padding-bottom: 0.1em; /* Add padding to prevent clipping */
+        }
+
+        /* Keyframe for the slide-in animation */
+        @keyframes slide-in-up {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        /* --- END: Slide-in Text Animation --- */
+
+
+        /* NEW: Shimmer effect for nav links */
+        .nav-link-shimmer {
+            position: relative;
+            overflow: hidden;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link-shimmer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(165, 180, 252, 0.5), transparent);
+            /* Indigo-300 light */
+            transform: skewX(-25deg);
+            transition: left 0.7s ease-in-out;
+        }
+
+        .nav-link-shimmer:hover::before {
+            left: 150%;
+        }
+
+        .nav-link-shimmer:hover {
+            color: var(--color-primary);
+        }
+
+        /* NEW: Footer link underline micro-interaction */
+        .footer-link {
+            position: relative;
+            transition: color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            /* Thinner for footer */
+            bottom: -3px;
+            left: 0;
+            background-color: white;
+            /* Match hover text */
+            transform-origin: bottom left;
+            transition: transform 0.3s ease-out;
+        }
+
+        .footer-link:hover {
+            color: white;
+            /* This is already a class */
+        }
+
+        .footer-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* NEW: Scroll-triggered reveal classes */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+            /* Performance hint */
+        }
+
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- END Custom Animations --- */
+
+
+        /* NEW: Accessibility - Respects user's request for reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+
+            /* Disable all animations and transitions */
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+                transition-delay: 0ms !important;
+            }
+
+            /* Keep the scroll-reveal elements visible by default */
+            .reveal-on-scroll {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            /* Stop the shimmer */
+            .nav-link-shimmer:hover::before {
+                left: -100%;
+            }
+
+            /* Stop pulsing and rotating */
+            .animate-pulse-light,
+            .animate-pulse-glow,
+            .animate-warm-glow,
+            .animate-float,
+            .animate-rotate-3d,
+            .aurora-blob {
+                animation: none;
+            }
+
+            /* Stop hover transforms */
+            .btn-primary:hover,
+            .btn-secondary:hover {
+                transform: none;
+            }
+
+            /* NEW: Stop 3D card flip */
+            .feature-card-container:hover .feature-card {
+                transform: none;
+            }
+            
+            /* --- NEW: Reduced motion for slide-in text --- */
+            /* Word is just visible, no transform */
+            .word-inner {
+                transform: translateY(0);
+                opacity: 1;
+                animation: none;
+            }
+            /* --- END: Reduced motion for slide-in text --- */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NEW: Aurora Background -->
+    <div class="aurora-background">
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+    </div>
+
+    <!-- NEW: Main Wrapper -->
+    <div class="main-content-wrapper">
+
+        <!-- Header/Navbar -->
+        <header class="sticky top-0 z-40 bg-white shadow-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 text-xl font-bold text-gray-800">
+                    <!-- UPDATED: MindEase Logo -->
+                    <img src="MindEaseLogo.jpg" alt="MindEase Logo" class="h-10 w-auto">
+                </div>
+
+                <!-- Navigation Links -->
+                <!-- MODIFIED: Added 'nav-link-shimmer' class to nav links -->
+                <nav class="hidden md:flex space-x-8 text-gray-600 font-medium">
+                    <a href="#features" class="nav-link-shimmer">Features</a>
+                    <a href="#howitworks" class="nav-link-shimmer">How It Works</a>
+                    <a href="#resources-preview" class="nav-link-shimmer">Resources</a>
+                    <a href="#trust" class="nav-link-shimmer">Trust</a>
+                </nav>
+
+                <!-- Sign In Button -->
+                <div class="flex items-center space-x-3">
+                    <a href="login.html"
+                        class="px-4 py-2 text-sm font-semibold text-violet-600 hover:text-violet-800 transition">Log
+                        In</a>
+                    <a href="signup.html"
+                        class="px-6 py-2 rounded-full text-white text-sm font-semibold btn-primary shadow-lg hover:shadow-xl">
+                        Get Started
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- 1. Hero Section -->
+            <section class="hero-gradient pt-16 pb-24 text-center overflow-x-hidden">
+                <div class="max-w-4xl mx-auto px-4">
+                    
+                    <!-- --- MODIFIED: Replaced Neon Headline with Slide-in Animation --- -->
+                    <h1 class="slide-in-headline">
+                        <span class="word-wrapper">
+                            <span class="word-inner" style="--delay: 0.3s;">Breathe.</span>
+                        </span>
+                        <span class="word-wrapper">
+                            <span class="word-inner" style="--delay: 0.6s;">Heal.</span>
+                        </span>
+                        <span class="word-wrapper">
+                            <span class="word-inner" style="--delay: 0.9s;">Grow.</span>
+                        </span>
+                    </h1>
+                    <!-- Subheading (MODIFIED for dark bg) -->
+                    <p class="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto animate-fade-in-delay-1">
+                        Guided support, self-help tools & a community that understands.
+                    </p>
+                    <!-- --- END MODIFICATION --- -->
+
+                    <!-- CTA Buttons -->
+                    <div class="flex justify-center space-x-4 mb-12 animate-fade-in-delay-2">
+                        <a href="signup.html"
+                            class="px-10 py-3 text-lg font-bold rounded-full text-white btn-primary shadow-2xl shadow-violet-500/50 animate-pulse-glow">
+                            Begin Your Journey
+                        </a>
+                        <a href="#resources-preview" class="px-10 py-3 text-lg font-bold rounded-full btn-secondary">
+                            Explore Resources
+                        </a>
+                    </div>
+
+                    <!-- UPDATED: Using your logo as the hero graphic with jiggle hover animation -->
+                    <div class="relative flex justify-center items-center py-8">
+                        <div class="logo-container">
+                            <img src="MindEaseLogo.jpg" alt="MindEase Logo" class="">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Value / Benefit Highlights -->
+            <section id="features" class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Simple Tools for Real Growth</h2>
+                    <!-- MODIFIED: Added perspective-grid class -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 perspective-grid">
+                        
+                        <!-- Feature 1: Mood Tracking (NEW 3D Card Structure) -->
+                        <div class="feature-card-container reveal-on-scroll" style="transition-delay: 100ms;">
+                            <div class="feature-card">
+                                <div class="card-front p-6 rounded-xl text-center flex flex-col justify-center items-center">
+                                    <i class="fas fa-chart-line text-4xl text-violet-500 mb-4 animate-pulse-light" style="animation-delay: 0.2s;"></i>
+                                    <h3 class="text-xl font-semibold mb-2">Personalized Mood Tracking</h3>
+                                    <p class="text-gray-500 text-sm">Understand your emotional patterns.</p>
+                                </div>
+                                <div class="card-back p-6 rounded-xl text-white flex flex-col justify-center items-center">
+                                    <h4 class="text-lg font-bold mb-2">Deep Insights</h4>
+                                    <p class="text-sm">See your mood trends over time. Find triggers and celebrate progress.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feature 2: Guided Exercises (NEW 3D Card Structure) -->
+                        <div class="feature-card-container reveal-on-scroll" style="transition-delay: 200ms;">
+                            <div class="feature-card">
+                                <div class="card-front p-6 rounded-xl text-center flex flex-col justify-center items-center">
+                                    <i class="fas fa-leaf text-4xl text-green-500 mb-4 animate-pulse-light" style="animation-delay: 0.4s;"></i>
+                                    <h3 class="text-xl font-semibold mb-2">Self-Guided Exercises</h3>
+                                    <p class="text-gray-500 text-sm">CBT, meditation, and journaling.</p>
+                                </div>
+                                <div class="card-back p-6 rounded-xl text-white flex flex-col justify-center items-center">
+                                    <h4 class="text-lg font-bold mb-2">Calm Your Mind</h4>
+                                    <p class="text-sm">Access a library of tools to find peace and build resilience.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feature 3: AI Support (NEW 3D Card Structure) -->
+                        <div class="feature-card-container reveal-on-scroll" style="transition-delay: 300ms;">
+                            <div class="feature-card">
+                                <div class="card-front p-6 rounded-xl text-center flex flex-col justify-center items-center">
+                                    <i class="fas fa-robot text-4xl text-blue-500 mb-4 animate-pulse-light" style="animation-delay: 0.6s;"></i>
+                                    <h3 class="text-xl font-semibold mb-2">Compassionate AI Chat</h3>
+                                    <p class="text-gray-500 text-sm">Non-judgmental support 24/7.</p>
+                                </div>
+                                <div class="card-back p-6 rounded-xl text-white flex flex-col justify-center items-center">
+                                    <h4 class="text-lg font-bold mb-2">Always Available</h4>
+                                    <p class="text-sm">Vent, reflect, or get guidance anytime, anywhere. 100% private.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Feature 4: Crisis Plan (NEW 3D Card Structure) -->
+                        <div class="feature-card-container reveal-on-scroll" style="transition-delay: 400ms;">
+                            <div class="feature-card">
+                                <div class="card-front p-6 rounded-xl text-center flex flex-col justify-center items-center">
+                                    <i class="fas fa-shield-alt text-4xl text-red-500 mb-4 animate-pulse-light" style="animation-delay: 0.8s;"></i>
+                                    <h3 class="text-xl font-semibold mb-2">Secure Safety Planning</h3>
+                                    <p class="text-gray-500 text-sm">Your private crisis plan.</p>
+                                </div>
+                                <div class="card-back p-6 rounded-xl text-white flex flex-col justify-center items-center">
+                                    <h4 class="text-lg font-bold mb-2">Stay Prepared</h4>
+                                    <p class="text-sm">Store contacts and coping strategies for when you need them most.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. How It Works / Flow -->
+            <section id="howitworks" class="py-20 bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-16 text-gray-800">Your Journey Starts Here, Simply.</h2>
+                    <div class="relative flex flex-col md:flex-row justify-between items-start md:space-y-0 space-y-12">
+                        <!-- Flow Line -->
+                        <div class="hidden md:block absolute top-10 left-0 right-0 h-1 bg-violet-200 mx-16"></div>
+
+                        <!-- Step 1 -->
+                        <div class="group flex flex-col items-center text-center max-w-xs md:z-10 bg-gray-50 px-4 reveal-on-scroll"
+                            style="transition-delay: 100ms;">
+                            <div
+                                class="w-20 h-20 flex items-center justify-center rounded-full bg-violet-600 text-white text-3xl font-bold mb-4 shadow-xl transition-transform duration-300 group-hover:scale-110">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">1. Sign In or Create Account</h3>
+                            <p class="text-gray-500 text-sm">It's quick, easy, and your data is always secure and private.
+                            </p>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="group flex flex-col items-center text-center max-w-xs md:z-10 bg-gray-50 px-4 reveal-on-scroll"
+                            style="transition-delay: 200ms;">
+                            <div
+                                class="w-20 h-20 flex items-center justify-center rounded-full bg-violet-600 text-white text-3xl font-bold mb-4 shadow-xl transition-transform duration-300 group-hover:scale-110">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">2. Check In</h3>
+                            <p class="text-gray-500 text-sm">Log your current mood or chat briefly with our wellness
+                                assistant.</p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="group flex flex-col items-center text-center max-w-xs md:z-10 bg-gray-50 px-4 reveal-on-scroll"
+                            style="transition-delay: 300ms;">
+                            <div
+                                class="w-20 h-20 flex items-center justify-center rounded-full bg-violet-600 text-white text-3xl font-bold mb-4 shadow-xl transition-transform duration-300 group-hover:scale-110">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">3. Get Personalized Guidance</h3>
+                            <p class="text-gray-500 text-sm">Receive a daily tip and recommendations tailored to your log
+                                history.</p>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="group flex flex-col items-center text-center max-w-xs md:z-10 bg-gray-50 px-4 reveal-on-scroll"
+                            style="transition-delay: 400ms;">
+                            <div
+                                class="w-20 h-20 flex items-center justify-center rounded-full bg-violet-600 text-white text-3xl font-bold mb-4 shadow-xl transition-transform duration-300 group-hover:scale-110">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">4. Track & Grow</h3>
+                            <p class="text-gray-500 text-sm">Use our tools, track progress, and feel heard every single
+                                day.
+                            </D>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Featured Tools/Resources (Preview) -->
+            <section id="resources-preview" class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">A Glimpse Inside MindEase</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Resource 1: Meditation -->
+                        <div class="relative bg-gray-100 p-6 rounded-xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 reveal-on-scroll"
+                            style="transition-delay: 100ms;">
+                            <div class="absolute inset-0 bg-gray-900 opacity-60 backdrop-blur-sm z-10"></div>
+                            <i class="fas fa-lock absolute top-4 right-4 text-white text-3xl z-20"></i>
+                            <div class="relative z-20 text-center py-10">
+                                <i class="fas fa-cloud text-6xl text-gray-300 mb-3"></i>
+                                <h4 class="text-xl font-bold text-white mb-2">Guided Meditation: Anxiety Relief</h4>
+                                <p class="text-gray-300 mb-4">A powerful 10-minute session to calm a racing mind.</p>
+                                <span
+                                    class="text-sm font-semibold text-accent-300 bg-violet-600 px-3 py-1 rounded-full text-white">
+                                    Members Only
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Resource 2: Journaling -->
+                        <div class="relative bg-gray-100 p-6 rounded-xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 reveal-on-scroll"
+                            style="transition-delay: 200ms;">
+                            <div class="absolute inset-0 bg-gray-900 opacity-60 backdrop-blur-sm z-10"></div>
+                            <i class="fas fa-lock absolute top-4 right-4 text-white text-3xl z-20"></i>
+                            <div class="relative z-20 text-center py-10">
+                                <i class="fas fa-feather-alt text-6xl text-gray-300 mb-3"></i>
+                                <h4 class="text-xl font-bold text-white mb-2">Daily Gratitude Prompts</h4>
+                                <p class="text-gray-300 mb-4">Start and end your day by focusing on positive moments.</p>
+                                <span
+                                    class="text-sm font-semibold text-accent-300 bg-violet-600 px-3 py-1 rounded-full text-white">
+                                    Available When You Sign In
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Resource 3: Educational -->
+                        <div class="relative bg-gray-100 p-6 rounded-xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 reveal-on-scroll"
+                            style="transition-delay: 300ms;">
+                            <div class="absolute inset-0 bg-gray-900 opacity-60 backdrop-blur-sm z-10"></div>
+                            <i class="fas fa-lock absolute top-4 right-4 text-white text-3xl z-20"></i>
+                            <div class="relative z-20 text-center py-10">
+                                <i class="fas fa-book-open text-6xl text-gray-300 mb-3"></i>
+                                <h4 class="text-xl font-bold text-white mb-2">Article: The Power of Boundaries</h4>
+                                <p class="text-gray-300 mb-4">Learn to set healthy limits without guilt or shame.</p>
+                                <span
+                                    class="text-sm font-semibold text-accent-300 bg-violet-600 px-3 py-1 rounded-full text-white">
+                                    Members Only
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Testimonials / Trust Signals -->
+            <section id="trust" class="py-20 bg-gray-100 overflow-x-hidden">
+                <!-- Added overflow-x-hidden -->
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Trusted Support, Real Stories</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <!-- Testimonial 1 -->
+                        <div class="p-8 bg-white rounded-xl shadow-xl border-t-4 border-violet-500 reveal-on-scroll"
+                            style="transition-delay: 100ms;">
+                            <i class="fas fa-quote-left text-3xl text-violet-300 mb-4"></i>
+                            <p class="text-lg italic text-gray-700 mb-4">
+                                "MindEase helped me feel heard again. The Mood Tracker gave me clarity, and the guided
+                                meditations genuinely helped me sleep better."
+                            </p>
+                            <p class="font-semibold text-gray-800">— Anjali S., Verified User</p>
+                        </div>
+                        <!-- Trust Signals / Privacy -->
+                        <div class="p-8 bg-white rounded-xl shadow-xl reveal-on-scroll"
+                            style="transition-delay: 200ms;">
+                            <h3 class="text-2xl font-bold mb-4 text-gray-800">Your Privacy is Our Priority</h3>
+                            <ul class="space-y-3 text-gray-600">
+                                <li class="flex items-center space-x-3">
+                                    <i class="fas fa-lock text-green-500"></i>
+                                    <span>Your data is **encrypted and private**.</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i class="fas fa-handshake text-green-500"></i>
+                                    <span>We follow strict **confidentiality protocols**.</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i class="fas fa-cloud-upload-alt text-green-500"></i>
+                                    <span>Powered by trusted, secure technology.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Final Call-to-Action & Sign In Section -->
+            <section class="py-24 bg-violet-600 text-white text-center">
+                <div class="max-w-xl mx-auto px-4">
+                    <h2 class="text-4xl font-extrabold mb-4">Ready to begin your wellness journey?</h2>
+                    <p class="text-xl mb-8 opacity-90">It only takes a moment to create a space that’s just for you.</p>
+
+                    <!-- Applied the warm-ethereal-glow animation here -->
+                    <a href="signup.html"
+                        class="inline-block px-12 py-4 text-xl font-bold rounded-full bg-white text-violet-600 shadow-2xl animate-warm-glow hover:bg-gray-100 transition duration-300 transform hover:scale-105">
+                        Get Started Now
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white pt-12 pb-6">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                    <!-- Brand Info -->
+                    <div>
+                        <!-- UPDATED: MindEase Logo -->
+                        <div class="flex items-center space-x-3 text-2xl font-extrabold mb-4">
+                            <img src="MindEaseLogo.jpg" alt="MindEase Logo" class="h-10 w-auto">
+                        </div>
+                        <p class="text-gray-400 text-sm">You are not alone. MindEase is here when you’re ready.</p>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <!-- MODIFIED: Added 'footer-link' class to links -->
+                    <div>
+                        <h5 class="text-lg font-semibold mb-4">Company</h5>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-white footer-link">About Us</a></li>
+                            <li><a href="#resources-preview"
+                                    class="text-gray-400 hover:text-white footer-link">Resources /
+                                    Blog</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white footer-link">Contact</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Support -->
+                    <!-- MODIFIED: Added 'footer-link' class to links -->
+                    <div>
+                        <h5 class="text-lg font-semibold mb-4">Support</h5>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-white footer-link">FAQs</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white footer-link">Privacy Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white footer-link">Terms of Service</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Social -->
+                    <div>
+                        <h5 class="text-lg font-semibold mb-4">Connect</h5>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-violet-400 transition"><i
+                                    class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-violet-400 transition"><i
+                                    class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-violet-400 transition"><i
+                                    class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-700 pt-6 text-center text-gray-500 text-sm">
+                    &copy; 2025 MindEase. All rights reserved.
+                </div>
+            </div>
+        </footer>
+
+    </div> <!-- NEW: End Main Wrapper -->
+
+    <!-- NEW: JavaScript for Scroll-Triggered Animations -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Select all elements that should be revealed on scroll
+            const revealElements = document.querySelectorAll(".reveal-on-scroll");
+
+            const observerOptions = {
+                root: null, // Use the viewport as the root
+                rootMargin: "0px",
+                threshold: 0.1 // Trigger when 10% of the element is visible
+            };
+
+
+            
+            const observerCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    // If the element is intersecting (visible)
+                    if (entry.isIntersecting) {
+                        // Add the 'is-visible' class to trigger the animation
+                        entry.target.classList.add("is-visible");
+                        // Stop observing the element so the animation only happens once
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+
+            // Create the Intersection Observer
+            const scrollObserver = new IntersectionObserver(observerCallback, observerOptions);
+
+            // Observe each reveal-on-scroll element
+            revealElements.forEach(el => {
+                scrollObserver.observe(el);
+            });
+        });
+    </script>
+</body>
+
+</html>
